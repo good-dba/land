@@ -1,4 +1,4 @@
-drop table if exists nts_mst
+drop table if exists nts_mst;
 create table if not exists nts_mst
 (
 nts_cd varchar(3) not null comment '세무서코드',
@@ -22,6 +22,6 @@ tax_yyyy   varchar(4)  not null comment '납세연도',
 tax_type   varchar(10) not null comment '세목',
 nts_cd     varchar(3)  not null comment '세무서코드',
 tax_amount int         not null comment '납세액',
-primary key (tax_yyyy, tax_type, tax_office)
+primary key (tax_yyyy, tax_type, nts_cd)
 ) comment '국세청-세무서별납세내역';
 
