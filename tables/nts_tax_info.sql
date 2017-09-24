@@ -1,0 +1,27 @@
+drop table if exists nts_mst
+create table if not exists nts_mst
+(
+nts_cd varchar(3) not null comment '세무서코드',
+nts_nm varchar(4) not null comment '세무서이름',
+primary key (nts_cd)
+) comment '국세청-전국세무관서 코드정의';
+
+drop table if exists nts_lawd_map;
+create table if not exists nts_lawd_map
+(
+nts_cd  varchar(3)  not null comment '세무서코드',
+lawd_cd varchar(10) not null comment '법정동코드',
+use_yn  varchar(1)  not null comment '사용유무',
+base_ym varchar(6)  not null comment '데이터기준시기(년월)'
+) comment '국세청-세무서와 법정동 매핑';
+
+drop table if exists tax_history;
+create table if not exists tax_history
+(
+tax_yyyy   varchar(4)  not null comment '납세연도',
+tax_type   varchar(10) not null comment '세목',
+nts_cd     varchar(3)  not null comment '세무서코드',
+tax_amount int         not null comment '납세액',
+primary key (tax_yyyy, tax_type, tax_office)
+) comment '국세청-세무서별납세내역';
+

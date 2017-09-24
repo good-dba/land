@@ -1,0 +1,37 @@
+drop table if exists adm_law_map;
+create table if not exists adm_law_map
+(
+admd_cd  varchar(10)  not null comment '행정동코드',
+sido_nm  varchar(5)  not null comment '시도이름',
+sgg_nm   varchar(7)  not null comment '시군구이름',
+admd_nm  varchar(10) not null comment '행정동이름',
+lawd_cd  varchar(10) not null comment '법정동 코드',
+lawd_nm  varchar(20) not null comment '법정동 이름',
+from_dt  varchar(8)  not null comment '시작일자',
+to_dt    varchar(8)           comment '말소일자',
+primary key (admd_cd, lawd_cd),
+index idx_lawd_cd (lawd_cd),
+index idx_admd_nm (admd_nm),
+index idx_lawd_nm (lawd_nm)
+) comment '행정동법정동매핑(행정표준코드 관리시스템)';
+
+drop table if exists lawd_mstr;
+create table if not exists lawd_mstr
+(
+lawd_cd varchar(10) not null comment '법정동 코드',
+lawd_nm varchar(20) not null comment '법정동 이름',
+abolished_yn varchar(2) not null comment '폐지여부',
+primary key (lawd_cd)
+) comment '법정동마스터(행정표준코드 관리시스템)';
+
+drop table if exists admd_mstr;
+create table if not exists admd_mstr
+(
+sido_cd varchar(2)  not null comment '시도코드',
+sido_nm varchar(5)  not null comment '시도이름',
+sgg_cd  varchar(5)  not null comment '시군구코드',
+sgg_nm  varchar(7)  not null comment '시군구이름',
+admd_cd varchar(7)  not null comment '행정동코드',
+admd_nm varchar(10) not null comment '행정동이름',
+primary key (admd_cd)
+) comment '행정동마스터(통계지리정보시스템)';
