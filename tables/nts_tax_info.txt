@@ -18,10 +18,11 @@ base_ym varchar(6)  not null comment '데이터기준시기(년월)'
 drop table if exists tax_history;
 create table if not exists tax_history
 (
+no         int         not null auto_increment,
 tax_yyyy   varchar(4)  not null comment '납세연도',
 tax_type   varchar(10) not null comment '세목',
-nts_cd     varchar(3)  not null comment '세무서코드',
+nts_nm     varchar(4)  not null comment '세무서이름',
 tax_amount int         not null comment '납세액',
-primary key (tax_yyyy, tax_type, nts_cd)
+primary key (no),
+index (tax_yyyy, tax_type, nts_nm)
 ) comment '국세청-세무서별납세내역';
-
