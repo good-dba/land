@@ -1,0 +1,28 @@
+drop table if exists population_history;
+create table if not exists population_history
+(
+yyyy               varchar(4)  not null comment '년도',
+admd_cd            varchar(10) not null comment '행정동코드',
+admd_nm            varchar(24) not null comment '행정동이름',
+tot_population     int          comment '총인구수',
+tot_household      int          comment '세대수',
+cnt_per_household  decimal(5,2) comment '세대당 인구',
+male_population    int          comment '남자 인구수',
+female_population  int          comment '여자 인구수',
+primary key (yyyy, admd_cd),
+index idx_admd_cd (admd_cd)
+) comment '행정안전부-주민등록 인구 및 세대';
+
+drop table if exists population_5term;
+create table if not exists population_5term
+(
+yyyy               varchar(4)  not null comment '년도',
+admd_cd            varchar(10) not null comment '행정동코드',
+admd_nm            varchar(24) not null comment '행정동이름',
+term5              varchar(8)  not null comment '5세별',
+tot_population     int          comment '총인구수',
+male_population    int          comment '남자 인구수',
+female_population  int          comment '여자 인구수',
+primary key (yyyy, admd_cd, term5),
+index idx_admd_cd (admd_cd)
+) comment 'KOSIS의 행정구역(읍면동)별/5세별 주민등록인구';
