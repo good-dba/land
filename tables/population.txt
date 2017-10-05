@@ -26,3 +26,17 @@ female_population  int          comment '여자 인구수',
 primary key (yyyy, admd_cd, term5),
 index idx_admd_cd (admd_cd)
 ) comment 'KOSIS의 행정구역(읍면동)별/5세별 주민등록인구';
+
+drop table if exists population_move;
+create table if not exists population_move
+(
+yyyy               varchar(4)  not null comment '년도',
+transfer_cd        varchar(10) not null comment '전출지코드',
+transfer_nm        varchar(24) not null comment '전출지',
+transference_cd    varchar(10) not null comment '전입지코드',
+transference_nm    varchar(24) not null comment '전입지',
+person_cnt         int         not null comment '이동자합계(명)',
+primary key (yyyy, transfer_cd, transference_cd),
+index idx_transfer_cd (transfer_cd),
+index idx_transference_cd (transference_cd)
+) comment 'KOSIS의 온라인간행물 인구이동통계 (시군구별 이동자수)';
