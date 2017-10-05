@@ -2,10 +2,9 @@ drop table if exists biz_worker;
 create table if not exists biz_worker
 (
 yyyy                    varchar(4)   not null comment '년도',
+biz_nm                  varchar(35)  not null comment '산업명',
 admd_cd                 varchar(10)  not null comment '행정동코드',
-biz_cd                  varchar(1)   not null comment '산업코드',
 admd_nm                 varchar(10)  not null comment '행정동명',
-biz_nm                  varchar(25)  not null comment '산업명',
 tot_company_cnt         int          not null comment '총사업체수',
 tot_worker_cnt          int          not null comment '총종사자수',
 male_worker_cnt         int          not null comment '남자 종사자수',
@@ -36,6 +35,6 @@ p_500_999_company_cnt   int          not null comment '500-999명 사업체수',
 p_500_999_worker_cnt    int          not null comment '500-999명 종사자수',
 p_1000_company_cnt      int          not null comment '1000명이상 사업체수',
 p_1000_worker_cnt       int          not null comment '1000명이상 종사자수',
-primary key (yyyy, admd_cd, biz_cd),
+primary key (yyyy, admd_cd, biz_nm),
 index idx_admd_cd (admd_cd)
 ) comment 'KOSIS의 온라인간행물 전국사업체조사 읍면동별 산업대분류별 현황';
