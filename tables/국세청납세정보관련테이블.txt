@@ -1,8 +1,9 @@
 drop table if exists nts_mst;
 create table if not exists nts_mst
 (
-nts_cd varchar(3) not null comment '세무서코드',
-nts_nm varchar(4) not null comment '세무서이름',
+nts_cd    varchar(3)  not null comment '세무서코드',
+nts_nm    varchar(4)  not null comment '세무서이름',
+work_area varchar(16) comment '업무지구',
 primary key (nts_cd)
 ) comment '국세청-전국세무관서 코드정의';
 
