@@ -22,7 +22,7 @@ create table if not exists drapt_move_size
 (
 apt_no          int          not null comment '아파트번호(drapt의 번호)',
 sell_ym         varchar(6)   not null comment '분양년월',
-supply_area     varchar(10)  not null comment '공급면적',
+supply_area     varchar(12)  not null comment '공급면적',
 priv_area       decimal(5,2) not null comment '전용면적',
 room_cnt        int          comment '방 수',
 bath_cnt        int          comment '욕실 수',
