@@ -1,1 +1,3 @@
-/home/ubuntu/workspace/API_key.py
+data_go_kr_apikey='CHQiZX6GcYWPyDjJI5LUcCGsxWdv59igYvsKyWKSWC7qv0CkaSbn95Tf3li1rk4p4Umffrf%2FvJ%2B%2F0SrnEy9x7g%3D%3D'
+kosis_kr_apikey = 'YjliNmQ1ZGY2NGY1NmM4MjE4NmIwZDg3MTdmMGQ1Y2I='
+
