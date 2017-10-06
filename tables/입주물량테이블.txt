@@ -1,5 +1,5 @@
-drop table if exists drapt_moving_basic;
-create table if not exists drapt_moving_basic
+drop table if exists drapt_move_basic;
+create table if not exists drapt_move_basic
 (
 apt_no          int         not null comment '아파트번호(drapt의 번호)',
 apt_nm          varchar(50) not null comment '아파트이름',
@@ -13,5 +13,21 @@ house_cnt       int         not null comment '세대수',
 top_floor       int         not null comment '최고층',
 characteristics varchar(50) comment '특징',
 primary key (apt_no, sell_ym, move_ym),
+index idx_sell_ym (sell_ym),
 index idx_move_ym (move_ym)
-) comment '분양기본정보-닥터아파트(drapt)';
+) comment '닥터아파트(drapt)-분양단지정보';
+
+drop table if exists drapt_move_size;
+create table if not exists drapt_move_size
+(
+apt_no          int          not null comment '아파트번호(drapt의 번호)',
+sell_ym         varchar(6)   not null comment '분양년월',
+supply_area     varchar(10)  not null comment '공급면적',
+priv_area       decimal(5,2) not null comment '전용면적',
+room_cnt        int          comment '방 수',
+bath_cnt        int          comment '욕실 수',
+house_cnt       int          comment '일반세대수',
+rent_house_cnt  int          comment '임대세대수',
+primary key (apt_no, sell_ym, supply_area),
+index idx_sell_ym (sell_ym)
+) comment '닥터아파트(drapt)-분양단지면적별세대수';
