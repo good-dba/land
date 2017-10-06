@@ -28,6 +28,6 @@ room_cnt        int          comment '방 수',
 bath_cnt        int          comment '욕실 수',
 house_cnt       int          comment '일반세대수',
 rent_house_cnt  int          comment '임대세대수',
-primary key (apt_no, sell_ym, supply_area),
+primary key (apt_no, sell_ym, supply_area, priv_area),
 index idx_sell_ym (sell_ym)
 ) comment '닥터아파트(drapt)-분양단지면적별세대수';
