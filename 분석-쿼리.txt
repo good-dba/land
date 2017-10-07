@@ -239,3 +239,41 @@ select yyyy, nm, sum(out_cnt) as out_cnt, sum(in_cnt) as in_cnt, sum(in_cnt) - s
  where yyyy = 2016
  group by yyyy, nm
  order by yyyy, pure_cnt
+ ;
+ 
+ -- 일자리 관련 쿼리
+ select yyyy,
+       l_nm,
+       sum(tot_company_cnt),
+       sum(tot_worker_cnt),
+       sum(p_500_999_company_cnt),
+       sum(p_500_999_worker_cnt),
+       sum(p_1000_company_cnt),
+       sum(p_1000_worker_cnt)
+  from
+(
+select w.yyyy,
+       if(a.admd_cd is not null, 
+          concat_ws(' ', a.sido_nm, a.sgg_nm, a.admd_nm),
+          (select concat_ws(' ', b.sido_nm, b.sgg_nm)
+             from admd_mstr b
+            where w.admd_cd = b.sgg_cd
+            limit 1)
+         ) as l_nm,
+       w.biz_nm,
+       w.tot_company_cnt,
+       w.tot_worker_cnt,
+       w.p_500_999_company_cnt,
+       w.p_500_999_worker_cnt,
+       w.p_1000_company_cnt,
+       w.p_1000_worker_cnt
+  from biz_worker w
+  left join admd_mstr a
+    on w.admd_cd = a.admd_cd
+ where w.yyyy = '2015'
+ order by w.yyyy,
+       w.biz_nm,
+       w.admd_cd
+) s
+group by yyyy, l_nm
+;
