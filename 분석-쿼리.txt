@@ -216,3 +216,26 @@ select  lawd_nm,
         where char_length(admd_cd) = 5
   ) s
 group by lawd_nm, yyyy
+
+-- 지역내 전출입 현황
+select yyyy, nm, sum(out_cnt) as out_cnt, sum(in_cnt) as in_cnt, sum(in_cnt) - sum(out_cnt) as pure_cnt
+  from (
+        select yyyy, transference_nm as nm, sum(person_cnt) as out_cnt, 0 as in_cnt
+          from population_move
+         where char_length(transfer_nm) != 2
+           and char_length(transference_nm) != 2
+           and substr(transfer_nm, 1, 2) in ('서울','경기','인천')
+           and transfer_nm like '경기%부천%'
+         group by transference_nm, yyyy
+        union all
+        select yyyy, transfer_nm as nm, 0 as out_cnt, sum(person_cnt) as in_cnt
+          from population_move
+         where char_length(transfer_nm) != 2
+           and char_length(transference_nm) != 2
+           and substr(transference_nm, 1, 2) in ('서울','경기','인천')
+           and transference_nm like '경기%부천%'
+         group by transfer_nm, yyyy
+       ) s
+ where yyyy = 2016
+ group by yyyy, nm
+ order by yyyy, pure_cnt
