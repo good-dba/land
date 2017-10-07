@@ -33,5 +33,7 @@ sgg_cd  varchar(5)  not null comment '시군구코드',
 sgg_nm  varchar(7)  not null comment '시군구이름',
 admd_cd varchar(7)  not null comment '행정동코드',
 admd_nm varchar(10) not null comment '행정동이름',
-primary key (admd_cd)
+primary key (admd_cd),
+index idx_sgg_cd (sgg_cd),
+index idx_sido_cd (sido_cd)
 ) comment '행정동마스터(통계지리정보시스템)';
