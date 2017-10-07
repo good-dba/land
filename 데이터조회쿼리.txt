@@ -1,0 +1,117 @@
+-- 입주물량: 단지별 면적별 세대수
+-- 닥터아파트 분양정보 기준
+select 
+apt_no,
+sum(house_cnt) as g_cnt,
+sum(if(priv_area<40, house_cnt, 0)) as g_mini,
+sum(if(priv_area>=40 and priv_area<60, house_cnt, 0)) as g_small,
+sum(if(priv_area>=60 and priv_area<85, house_cnt, 0)) as g_medium,
+sum(if(priv_area>=85, house_cnt, 0)) as g_large,
+sum(rent_house_cnt) as r_cnt,
+sum(if(priv_area<40, rent_house_cnt, 0)) as r_mini,
+sum(if(priv_area>=40 and priv_area<60, rent_house_cnt, 0)) as r_small,
+sum(if(priv_area>=60 and priv_area<85, rent_house_cnt, 0)) as r_medium,
+sum(if(priv_area>=85, rent_house_cnt, 0)) as r_large
+from drapt_move_size
+group by apt_no
+limit 10
+;
+
+-- 시군구별 입주물량 (where절에서 기간 설정할 것) : 입주물량 많은 지역 선별에 편리
+-- 닥터아파트 분양정보 기준
+select 
+substring_index(b.address, ' ', 2) as "시군구",
+-- b.move_ym as "입주년월",
+-- b.apt_type as "주택유형",
+sum(b.house_cnt) as "세대수",
+'*',
+sum(s.g_cnt) as "일반-세대수",
+sum(s.g_mini) as "초소형",
+sum(s.g_small) as "소형",
+sum(s.g_medium) as "중형",
+sum(s.g_large) as "대형",
+'*',
+sum(s.r_cnt) as "임대-세대수",
+sum(s.r_mini) as "초소형",
+sum(s.r_small) as "소형",
+sum(s.r_medium) as "중형",
+sum(s.r_large) as "대형"
+  from drapt_move_basic b
+  join (
+        -- 입주물량: 단지별 면적별 세대수
+        -- 닥터아파트 분양정보 기준
+        select 
+        apt_no,
+        sum(house_cnt) as g_cnt,
+        sum(if(priv_area<40, house_cnt, 0)) as g_mini,
+        sum(if(priv_area>=40 and priv_area<60, house_cnt, 0)) as g_small,
+        sum(if(priv_area>=60 and priv_area<85, house_cnt, 0)) as g_medium,
+        sum(if(priv_area>=85, house_cnt, 0)) as g_large,
+        sum(rent_house_cnt) as r_cnt,
+        sum(if(priv_area<40, rent_house_cnt, 0)) as r_mini,
+        sum(if(priv_area>=40 and priv_area<60, rent_house_cnt, 0)) as r_small,
+        sum(if(priv_area>=60 and priv_area<85, rent_house_cnt, 0)) as r_medium,
+        sum(if(priv_area>=85, rent_house_cnt, 0)) as r_large
+        from drapt_move_size
+        group by apt_no
+       ) s
+    on b.apt_no = s.apt_no
+ where b.move_ym > '201710'
+--   and b.address like '인천광역시 남구%'
+group by
+substring_index(b.address, ' ', 2)
+-- b.move_ym,
+-- b.apt_type
+order by 2 desc limit 30
+;
+
+-- 읍면동 단지별 입주물량 : 시군구 내에서 입주물량 파악에 편리
+-- where절에 기간 및 시군구 설정할 것
+-- 닥터아파트 분양정보 기준
+select 
+substring_index(b.address, ' ', 3) as "읍면동",
+-- b.move_ym as "입주년월",
+b.apt_type as "주택유형",
+b.apt_nm as "단지명",
+sum(b.house_cnt) as "세대수",
+'*',
+sum(s.g_cnt) as "일반-세대수",
+sum(s.g_mini) as "초소형",
+sum(s.g_small) as "소형",
+sum(s.g_medium) as "중형",
+sum(s.g_large) as "대형",
+'*',
+sum(s.r_cnt) as "임대-세대수",
+sum(s.r_mini) as "초소형",
+sum(s.r_small) as "소형",
+sum(s.r_medium) as "중형",
+sum(s.r_large) as "대형"
+  from drapt_move_basic b
+  join (
+        -- 입주물량: 단지별 면적별 세대수
+        -- 닥터아파트 분양정보 기준
+        select 
+        apt_no,
+        sum(house_cnt) as g_cnt,
+        sum(if(priv_area<40, house_cnt, 0)) as g_mini,
+        sum(if(priv_area>=40 and priv_area<60, house_cnt, 0)) as g_small,
+        sum(if(priv_area>=60 and priv_area<85, house_cnt, 0)) as g_medium,
+        sum(if(priv_area>=85, house_cnt, 0)) as g_large,
+        sum(rent_house_cnt) as r_cnt,
+        sum(if(priv_area<40, rent_house_cnt, 0)) as r_mini,
+        sum(if(priv_area>=40 and priv_area<60, rent_house_cnt, 0)) as r_small,
+        sum(if(priv_area>=60 and priv_area<85, rent_house_cnt, 0)) as r_medium,
+        sum(if(priv_area>=85, rent_house_cnt, 0)) as r_large
+        from drapt_move_size
+        group by apt_no
+       ) s
+    on b.apt_no = s.apt_no
+ where b.move_ym > '201710'
+   and b.address like '경기도 부천시%'
+group by
+substring_index(b.address, ' ', 3),
+-- b.move_ym,
+b.apt_type,
+b.apt_nm
+order by 1, 4
+;
