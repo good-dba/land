@@ -2,7 +2,7 @@ drop table if exists drapt_move_basic;
 create table if not exists drapt_move_basic
 (
 apt_no          int         not null comment '아파트번호(drapt의 번호)',
-apt_nm          varchar(50) not null comment '아파트이름',
+apt_nm          varchar(35) not null comment '아파트이름',
 sell_ym         varchar(6)  not null comment '분양년월',
 move_ym         varchar(6)  not null comment '입주년월',
 sell_type       varchar(4)  not null comment '분양형태',
