@@ -115,3 +115,104 @@ b.apt_type,
 b.apt_nm
 order by 1, 4
 ;
+
+-- 지역내 인구 현황 추출
+select 
+       yyyy as 년도,
+       lawd_nm as 법정동,
+       sum(tot_population) as 인구수,
+       sum(tot_household) as 세대수
+  from (
+        select yyyy, 
+               (select a.lawd_nm
+                  from adm_law_map a
+                 where a.admd_cd = p.admd_cd
+                 order by a.from_dt desc
+                 limit 1
+               ) as lawd_nm,
+               tot_population,
+               tot_household
+          from population_history p
+         where admd_nm like '경기도 부천시%'
+           and tot_population > 0
+           and yyyy = '2016'
+       ) s
+ group by yyyy, lawd_nm
+;
+
+-- 인구현황 세부통계
+select 
+       yyyy as 년도,
+       lawd_nm as 지역,
+       sum(tot_population) as 인구수,
+       sum(over65) as 65세이상,
+       sum(tot_household) as 세대수,
+       round(sum(tot_population)/sum(tot_household), 2) as 세대당인구수,
+       concat(round(sum(over65)/sum(tot_population)*100), '%') as 65세이상비율
+  from (
+        select yyyy, 
+               (select sum(
+                       case when substr(term5, 1, 2) between '65' and '95' or term5 = '100+'
+                       then tot_population
+                       end)
+                  from population_5term t
+                 where t.admd_cd = p.admd_cd
+                   and t.yyyy = p.yyyy
+               ) as over65,
+               (select a.lawd_nm
+                  from adm_law_map a
+                 where a.admd_cd = p.admd_cd
+                 order by a.from_dt desc
+                 limit 1
+               ) as lawd_nm,
+               tot_population,
+               tot_household,
+               cnt_per_household
+          from population_history p
+         where admd_nm like '경기도 부천시%'
+           and tot_population > 0
+           and yyyy = '2016'
+       ) p
+ group by yyyy, lawd_nm
+ order by 3 desc
+;
+
+-- 구(서울/인천), 시(경기)별 인구 현황
+select  lawd_nm,
+        yyyy,
+        sum(case generation when '10세미만' then tot_population end) as g00,
+        sum(case generation when '10대' then tot_population end) as g10,
+        sum(case generation when '20대' then tot_population end) as g20,
+        sum(case generation when '30대' then tot_population end) as g30,
+        sum(case generation when '40대' then tot_population end) as g40,
+        sum(case generation when '50대' then tot_population end) as g50,
+        sum(case generation when '60대이상' then tot_population end) as g60,
+        sum(tot_population) as total
+  from (
+        select yyyy,
+                admd_cd,
+                case substr(admd_cd, 1, 2) 
+                when '11' then concat('서울특별시 ', trim(admd_nm))
+                when '28' then concat('인천광역시 ', trim(admd_nm))
+                when '41' then concat('경기도 ', trim(admd_nm))
+                end as lawd_nm,
+                case term5 
+                when '0 - 4세' then '10세미만'
+                when '5 - 9세' then '10세미만'
+                when '10 - 14세' then '10대'
+                when '15 - 19세' then '10대'
+                when '20 - 24세' then '20대'
+                when '25 - 29세' then '20대'
+                when '30 - 34세' then '30대'
+                when '35 - 39세' then '30대'
+                when '40 - 44세' then '40대'
+                when '45 - 49세' then '40대'
+                when '50 - 54세' then '50대'
+                when '55 - 59세' then '50대'
+                else case when term5 != '계' then '60대이상' end
+                end as generation,
+                tot_population
+        from population_5term t
+        where char_length(admd_cd) = 5
+  ) s
+group by lawd_nm, yyyy
